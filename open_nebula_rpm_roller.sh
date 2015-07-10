@@ -44,16 +44,30 @@ RELEASEURL=`curl -s http://downloads.opennebula.org/packages/ | grep -i "openneb
 
 RELEASEVERSION=`echo "$RELEASEURL" | awk -F '-' '{print $2}'`
 
+echo "GITBASEVERSION IS $GITBASEVERSION"
+echo "RELEASEURL IS $RELEASEURL"
+echo "RELEASEVERSION IS $RELEASEVERSION"
+
+
 echo -e "\nGit Target Version       = $GITBASEVERSION"
 echo -e "Packaged Release Version = $RELEASEVERSION \n"
 echo -e "The above two numbers should be reasonably similar if not CTRL-C"
 sleep 4
 
-echo "Now Downloading the packaged release version from downloads.opennebula.org to /tmp"
 #wget http://downloads.opennebula.org/packages/opennebula-4.12.1/CentOS-7/CentOS-7-opennebula-4.12.1-1.tar.gz
-FULLURL="http://downloads.opennebula.org/packages/$RELEASEURL/CentOS-7/CentOS-7-$RELEASEURL"
-TARGZ=".tar.gz"
-FULLURL=$FULLURL$TARGZ
+#URLSTUB="http://downloads.opennebula.org/packages/$RELEASEURL/CentOS-7/CentOS-7-$RELEASEURL"
+#TARGZ=".tar.gz"
+#FULLURL=$FULLURL$TARGZ
 
-echo "Full url is $FULLURL"
-wget --directory-prefix=/tmp $FULLURL
+
+REMOTETARGZ=`curl -s http://downloads.opennebula.org/packages/$RELEASEURL/CentOS-7/ | grep -i "tar.gz" | awk -F 'href' '{print $2}' | awk -F '"' '{print $2}'`
+FULLURL="http://downloads.opennebula.org/packages/$RELEASEURL/CentOS-7/$REMOTETARGZ"
+echo "Now Downloading the packaged release version from  $FULLURL"
+#TODO: Check if file already exists
+if [ -f /tmp/$REMOTETARGZ ] 
+then
+	echo "ERROR: File already exists, please remove or move it from /tmp/$REMOTETARGZ this script will not generate RPMS from a file it did not download"
+else
+	wget --directory-prefix=/tmp $FULLURL
+fi
+
