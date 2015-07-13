@@ -112,7 +112,7 @@ echo "Should this script attempt to install them? [y/n]"
 read INSTALLPACKAGES
 if [[ $INSTALLPACKAGES == "y" || $INSTALLPACKAGES == "Y" ]]
 then
-	yum install libcurl-devel libxml2-devel xmlrpc-c-devel mysql-devel sqlite-devel scons java-1.7.0-openjdk-devel rpm-build
+	yum install libcurl-devel libxml2-devel xmlrpc-c-devel mysql-devel sqlite-devel scons java-1.7.0-openjdk-devel rpm-build ruby scons gcc-c++ gcc make
 	yum install -y http://mirror-proxy.rc.fas.harvard.edu/centos/6/os/x86_64/Packages/log4cpp-1.0-13.el6_5.1.x86_64.rpm
 	yum install -y http://mirror-proxy.rc.fas.harvard.edu/centos/6/os/x86_64/Packages/log4cpp-devel-1.0-13.el6_5.1.x86_64.rpm
 fi 
