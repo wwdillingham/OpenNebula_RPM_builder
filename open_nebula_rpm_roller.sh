@@ -93,10 +93,14 @@ mkdir -p /tmp/$RELEASEURL-fasrc/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 echo "%_topdir /tmp/$RELEASEURL-fasrc" > ~/.rpmmacros
 sleep 2
 echo "need to make the source tar.gz from git branch and stick it in SOURCES"
-echo "making /tmp/$RELEASEURL-fasrc/SOURCES/$RELEASEURL$TARGZ from stuff here: /tmp/$EXTRACTEDSOURCEDIR/*"
-tar -cvzf /tmp/$RELEASEURL-fasrc/SOURCES/$RELEASEURL$TARGZ /tmp/$EXTRACTEDSOURCEDIR*
+mkdir /tmp/one_source_scratch
+mkdir /tmp/one_source_scratch/$RELEASEURL
+rsync -a /tmp/one/* /tmp/one_source_scratch/$RELEASEURL
+echo "making /tmp/$RELEASEURL-fasrc/SOURCES/$RELEASEURL$TARGZ from stuff here: /tmp/one_source_scratch/$RELEASEURL" #not making it from git branch
+cd /tmp/one_source_scratch
+tar -cvzf /tmp/$RELEASEURL-fasrc/SOURCES/$RELEASEURL$TARGZ $RELEASEURL
 echo "Now we will rsync the source rpm contents (build requirements) into our RPM build file structure"
-rsync -avh --exclude 'opennebula*.tar.gz' /tmp/$EXTRACTEDSOURCEDIR /tmp/$RELEASEURL-fasrc/SOURCES
+rsync -a --exclude 'opennebula*.tar.gz' /tmp/$EXTRACTEDSOURCEDIR /tmp/$RELEASEURL-fasrc/SOURCES
 echo "rsync complete"
 sleep 2
 echo "Now copying the spec file from the downloaded tarball into the build directory"
