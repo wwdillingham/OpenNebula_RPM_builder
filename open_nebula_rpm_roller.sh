@@ -51,7 +51,7 @@ sleep 4
 
 #wget http://downloads.opennebula.org/packages/opennebula-4.12.1/CentOS-7/CentOS-7-opennebula-4.12.1-1.tar.gz
 #URLSTUB="http://downloads.opennebula.org/packages/$RELEASEURL/CentOS-7/CentOS-7-$RELEASEURL"
-#TARGZ=".tar.gz"
+TARGZ=".tar.gz"
 #FULLURL=$FULLURL$TARGZ
 
 
@@ -89,13 +89,28 @@ fi
 sleep 3
 echo "Now we will build the file structure for an RPM build."
 mkdir -p /tmp/$RELEASEURL-fasrc/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
-echo '%_topdir %(echo $HOME)/rpmbuild' > ~/.rpmmacros
+#echo '%_topdir %(echo $HOME)/rpmbuild' > ~/.rpmmacros
+echo "%_topdir /tmp/$RELEASEURL-fasrc" > ~/.rpmmacros
 sleep 2
-echo "Now we will rsync the source from the git branch into our RPM build file structure"
-rsync -ah /tmp/one/src/* /tmp/$RELEASEURL-fasrc/SOURCES
+echo "need to make the source tar.gz from git branch and stick it in SOURCES"
+echo "making /tmp/$RELEASEURL-fasrc/SOURCES/$RELEASEURL$TARGZ from stuff here: /tmp/$EXTRACTEDSOURCEDIR/*"
+tar -cvzf /tmp/$RELEASEURL-fasrc/SOURCES/$RELEASEURL$TARGZ /tmp/$EXTRACTEDSOURCEDIR*
+echo "Now we will rsync the source rpm contents (build requirements) into our RPM build file structure"
+rsync -avh --exclude 'opennebula*.tar.gz' /tmp/$EXTRACTEDSOURCEDIR /tmp/$RELEASEURL-fasrc/SOURCES
 echo "rsync complete"
 sleep 2
 echo "Now copying the spec file from the downloaded tarball into the build directory"
 cp /tmp/$EXTRACTEDSOURCEDIR/centos7.spec /tmp/$RELEASEURL-fasrc/SPECS
 echo "spec file copy complete"
+sleep 2
+echo "The following dependencies are required for the source compilation / rpm building: rpm-build libcurl-devel libxml2-devel xmlrpc-c-devel mysql-devel sqlite-devel scons java-1.7.0-openjdk-devel"
+echo "Should this script attempt to install them? [y/n]"
+read INSTALLPACKAGES
+if [[ $INSTALLPACKAGES == "y" || $INSTALLPACKAGES == "Y" ]]
+then
+	yum install libcurl-devel libxml2-devel xmlrpc-c-devel mysql-devel sqlite-devel scons java-1.7.0-openjdk-devel rpm-build
+fi 
+sleep 2 
+echo "Will now build the RPMs"
+rpmbuild /tmp/$RELEASEURL-fasrc/SPECS/centos7.spec -bb
 
