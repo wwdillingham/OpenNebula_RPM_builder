@@ -45,6 +45,13 @@ sleep 3
 git checkout $REMOTEBRANCH
 sleep 2
 
+####Get release sub-version####
+RELEASESUBVERSION=`grep -A 3 "static string code_version()" /tmp/one/include/Nebula.h | grep -i return | awk -F "\"" '{print $2}'`
+echo "Please add a site specific version: example: house01"
+echo "This will cause the rpms to roll out with version $RELEASESUBVERSION-house01"
+read HOUSEVERSION
+echo "Will roll RPMS with version $RELEASEVERSION-$HOUSEVERSION"
+
 ##Download the most recent sourcepackage subversion
 #############
 echo "We are going to now roll the changes present in the git working repo that you selected into the latest source package"
