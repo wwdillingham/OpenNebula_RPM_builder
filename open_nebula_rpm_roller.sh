@@ -123,12 +123,9 @@ echo "Now copying the spec file from the downloaded tarball into the build direc
 cp /tmp/$EXTRACTEDSOURCEDIR/centos7.spec /tmp/opennebula-$RELEASESUBVERSION-$HOUSEVERSION/SPECS
 # sed -i 's/^.*Version\:.*$/Version: 4.12.3-fasrc01/g'
 echo "Applying $RELEASESUBVERSION-$HOUSEVERSION to spec file"
-sed -i 's/^.*Version\:.*$/Version: $RELEASESUBVERSION-$HOUSEVERSION/g' /tmp/$RELEASEURL-fasrc/SPECS/centos7.spec
+sed -i 's/^.*Version\:.*$/Version: $RELEASESUBVERSION-$HOUSEVERSION/g' /tmp/opennebula-$RELEASESUBVERSION-$HOUSEVERSION/SPECS/centos7.spec 
 echo "spec file copy complete"
 sleep 2
-echo "The following dependencies are required for the source compilation / rpm building: rpm-build libcurl-devel libxml2-devel xmlrpc-c-devel mysql-devel sqlite-devel scons java-1.7.0-openjdk-devel log4cpp log4cpp-devel"
-echo "Should this script attempt to install them? [y/n]"
-sleep 2 
 echo "Will now build the RPMs"
 rpmbuild /tmp/$RELEASEURL-fasrc/SPECS/centos7.spec -bb
 
