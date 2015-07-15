@@ -50,7 +50,7 @@ RELEASESUBVERSION=`grep -A 3 "static string code_version()" /tmp/one/include/Neb
 echo "Please add a site specific version: example: house01"
 echo "This will cause the rpms to roll out with version $RELEASESUBVERSION-house01"
 read HOUSEVERSION
-echo "Will roll RPMS with version $RELEASEVERSION-$HOUSEVERSION"
+echo "Will roll RPMS with version $RELEASESUBVERSION-$HOUSEVERSION"
 
 ##Download the most recent sourcepackage subversion
 #############
@@ -67,12 +67,7 @@ echo -e "Packaged Release Version = $RELEASEVERSION \n"
 echo -e "The above two numbers should be reasonably similar if not CTRL-C"
 sleep 4
 
-#wget http://downloads.opennebula.org/packages/opennebula-4.12.1/CentOS-7/CentOS-7-opennebula-4.12.1-1.tar.gz
-#URLSTUB="http://downloads.opennebula.org/packages/$RELEASEURL/CentOS-7/CentOS-7-$RELEASEURL"
 TARGZ=".tar.gz"
-#FULLURL=$FULLURL$TARGZ
-
-
 REMOTETARGZ=`curl -s http://downloads.opennebula.org/packages/$RELEASEURL/CentOS-7/ | grep -i "tar.gz" | awk -F 'href' '{print $2}' | awk -F '"' '{print $2}'`
 FULLURL="http://downloads.opennebula.org/packages/$RELEASEURL/CentOS-7/$REMOTETARGZ"
 #TODO: Check if file already exists
@@ -89,9 +84,12 @@ fi
 sleep 2
 echo "Now extracting the archive we downloaded: /tmp/$REMOTETARGZ"
 sleep 2
-tar xf /tmp/$REMOTETARGZ -C /tmp #$REMOTETARGZ --verbose
+tar xf /tmp/$REMOTETARGZ -C /tmp 
 EXTRACTEDSOURCEDIR=`tar -tf  /tmp/$REMOTETARGZ  | grep -v ".rpm" | grep -i src`
 echo "EXTRACTEDSOURCEDIR is $EXTRACTEDSOURCEDIR"
+
+#####We now need to swap in the version to the SPEC file. 
+
 
 if [ -d /tmp/$EXTRACTEDSOURCEDIR ]
 then
