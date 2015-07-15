@@ -106,7 +106,7 @@ sleep 3
 echo "Now we will build the file structure for an RPM build."
 mkdir -p /tmp/$RELEASEURL-fasrc/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 #echo '%_topdir %(echo $HOME)/rpmbuild' > ~/.rpmmacros
-echo "%_topdir /tmp/$RELEASEURL-fasrc" > ~/.rpmmacros
+echo "%_topdir /tmp/opennebula-$RELEASESUBVERSION-$HOUSEVERSION" > ~/.rpmmacros
 sleep 2
 echo "need to make the source tar.gz from git branch and stick it in SOURCES"
 mkdir /tmp/one_source_scratch
@@ -122,6 +122,8 @@ sleep 2
 echo "Now copying the spec file from the downloaded tarball into the build directory"
 cp /tmp/$EXTRACTEDSOURCEDIR/centos7.spec /tmp/$RELEASEURL-fasrc/SPECS
 # sed -i 's/^.*Version\:.*$/Version: 4.12.3-fasrc01/g'
+echo "Applying $RELEASESUBVERSION-$HOUSEVERSION to spec file"
+sed -i 's/^.*Version\:.*$/Version: $RELEASESUBVERSION-$HOUSEVERSION/g' 
 echo "spec file copy complete"
 sleep 2
 echo "The following dependencies are required for the source compilation / rpm building: rpm-build libcurl-devel libxml2-devel xmlrpc-c-devel mysql-devel sqlite-devel scons java-1.7.0-openjdk-devel log4cpp log4cpp-devel"
