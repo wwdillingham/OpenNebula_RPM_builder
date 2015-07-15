@@ -115,7 +115,7 @@ mkdir /tmp/one_source_scratch/opennebula-$RELEASESUBVERSION.$HOUSEVERSION
 rsync -a /tmp/one/* /tmp/one_source_scratch/opennebula-$RELEASESUBVERSION.$HOUSEVERSION #copy git branch source
 echo "making /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SOURCES/opennebula-$RELEASESUBVERSION.$HOUSEVERSION$TARGZ from stuff here: /tmp/one_source_scratch/$RELEASEURL" 
 cd /tmp/one_source_scratch
-tar -cvzf /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SOURCES/opennebula-$RELEASESUBVERSION.$HOUSEVERSION$TARGZ $RELEASEURL
+tar -cvzf /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SOURCES/opennebula-$RELEASESUBVERSION.$HOUSEVERSION$TARGZ opennebula-$RELEASESUBVERSION.$HOUSEVERSION
 echo "Now we will rsync the source rpm contents (build requirements) into our RPM build file structure"
 rsync -a --exclude 'opennebula*.tar.gz' /tmp/$EXTRACTEDSOURCEDIR /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SOURCES
 echo "rsync complete"
