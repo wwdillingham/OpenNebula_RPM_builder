@@ -115,7 +115,7 @@ mkdir /tmp/one_source_scratch/$RELEASEURL
 rsync -a /tmp/one/* /tmp/one_source_scratch/$RELEASEURL
 echo "making /tmp/$RELEASEURL-fasrc/SOURCES/$RELEASEURL$TARGZ from stuff here: /tmp/one_source_scratch/$RELEASEURL" 
 cd /tmp/one_source_scratch
-tar -cvzf /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SOURCES/$RELEASEURL$TARGZ $RELEASEURL
+tar -cvzf /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SOURCES/$RELEASESUBVERSION.$HOUSEVERSION$TARGZ $RELEASEURL
 echo "Now we will rsync the source rpm contents (build requirements) into our RPM build file structure"
 rsync -a --exclude 'opennebula*.tar.gz' /tmp/$EXTRACTEDSOURCEDIR /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SOURCES
 echo "rsync complete"
