@@ -64,6 +64,7 @@ RELEASEURL=`curl -s http://downloads.opennebula.org/packages/ | grep -i "openneb
 RELEASEVERSION=`echo "$RELEASEURL" | awk -F '-' '{print $2}'`
 echo -e "\nGit Target Version       = $GITBASEVERSION"
 echo -e "Packaged Release Version = $RELEASEVERSION \n"
+echo -e "Resulting RPM Version    = $RELEASESUBVERSION-$HOUSEVERSION"
 echo -e "The above two numbers should be reasonably similar if not CTRL-C"
 sleep 4
 
@@ -123,7 +124,7 @@ echo "Now copying the spec file from the downloaded tarball into the build direc
 cp /tmp/$EXTRACTEDSOURCEDIR/centos7.spec /tmp/opennebula-$RELEASESUBVERSION-$HOUSEVERSION/SPECS
 # sed -i 's/^.*Version\:.*$/Version: 4.12.3-fasrc01/g'
 echo "Applying $RELEASESUBVERSION-$HOUSEVERSION to spec file"
-sed -i 's/^.*Version\:.*$/Version: $RELEASESUBVERSION-$HOUSEVERSION/g' /tmp/opennebula-$RELEASESUBVERSION-$HOUSEVERSION/SPECS/centos7.spec 
+sed -i "s/^.*Version\:.*$/Version: $RELEASESUBVERSION-$HOUSEVERSION/g" /tmp/opennebula-$RELEASESUBVERSION-$HOUSEVERSION/SPECS/centos7.spec 
 echo "spec file copy complete"
 sleep 2
 echo "Will now build the RPMs"
