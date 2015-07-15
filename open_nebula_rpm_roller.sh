@@ -111,8 +111,8 @@ echo "%_topdir /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION" > ~/.rpmmacros
 sleep 2
 echo "need to make the source tar.gz from git branch and stick it in SOURCES"
 mkdir /tmp/one_source_scratch
-mkdir /tmp/one_source_scratch/$RELEASEURL
-rsync -a /tmp/one/* /tmp/one_source_scratch/$RELEASEURL
+mkdir /tmp/one_source_scratch/opennebula-$RELEASESUBVERSION.$HOUSEVERSION
+rsync -a /tmp/one/* /tmp/one_source_scratch/opennebula-$RELEASESUBVERSION.$HOUSEVERSION #copy git branch source
 echo "making /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SOURCES/opennebula-$RELEASESUBVERSION.$HOUSEVERSION$TARGZ from stuff here: /tmp/one_source_scratch/$RELEASEURL" 
 cd /tmp/one_source_scratch
 tar -cvzf /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SOURCES/opennebula-$RELEASESUBVERSION.$HOUSEVERSION$TARGZ $RELEASEURL
