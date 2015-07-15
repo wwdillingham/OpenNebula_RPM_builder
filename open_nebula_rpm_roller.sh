@@ -127,5 +127,5 @@ sed -i 's/^.*Version\:.*$/Version: $RELEASESUBVERSION-$HOUSEVERSION/g' /tmp/open
 echo "spec file copy complete"
 sleep 2
 echo "Will now build the RPMs"
-rpmbuild /tmp/$RELEASEURL-fasrc/SPECS/centos7.spec -bb
+rpmbuild /tmp/opennebula-$RELEASESUBVERSION-$HOUSEVERSION/SPECS/centos7.spec -bb
 
