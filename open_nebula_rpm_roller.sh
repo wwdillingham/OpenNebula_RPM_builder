@@ -3,7 +3,7 @@
 #wes_dillingham@harvard.edu
 
 
-echo "This script required git, scons, wget and, yum-builddep (from yum-utils) to run sucessfully, should we ensure they are installed? [y/n]"
+echo "This script required rsync, rpm-build, git, scons, wget, and yum-builddep (from yum-utils) to run sucessfully, should we ensure they are installed? [y/n]"
 read INSTALLPACKAGES
 if [[ $INSTALLPACKAGES == "y" || $INSTALLPACKAGES == "Y" ]]
 then
@@ -138,7 +138,17 @@ sed -i "s/^.*Version\:.*$/Version: $RELEASESUBVERSION.$HOUSEVERSION/g" /tmp/open
 #need to verify it has the dependencies required to build the RPM
 yum-builddep /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SPECS/centos7.spec
 
+echo "Where would you like the RPM files to be copied to once they are done building?"
+read RPMOUTPUTDIRECTORY
 
 #it all comes down to this
 rpmbuild /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SPECS/centos7.spec -bb
+
+#Copy contents out of the rpm-build buildir 
+mdkir -p $RPMOUTPUTDIRECTORY
+rsync -a /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/RPMS/* $RPMOUTPUTDIRECTORY
+
+echo "built the following RPMs located in $RPMOUTPUTDIRECTORY:"
+ls -lah $RPMOUTPUTDIRECTORY
+
 
