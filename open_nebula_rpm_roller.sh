@@ -19,7 +19,18 @@ fi
 
 
 #Clone the repo in /tmp
-echo "Update local copy of OpenNebula with remote...."
+echo "What is the https url of the remote git repo DEFAULT: https://github.com/OpenNebula/one.git"
+read REMOTEGITURL
+if [[ -z REMOTEGITURL ]] then REMOTEGITURL="https://github.com/OpenNebula/one.git" fi #make default if empty
+
+#Verify that the remote repository exists
+if [[ `echo $REMOTEGITURL | rev | cut -d"." -f2- | rev | xargs curl --silent | wc -l` == 0 ]]
+then
+	echo "Invalid remote git repository (probably doesnt exist): $REMOTEGITURL"
+	exit
+fi
+
+echo "Update local copy of OpenNebula with remote: $REMOTEGITURL"
 sleep 3
 if [ -d /tmp/one ]
 then
@@ -148,7 +159,4 @@ rpmbuild /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SPECS/centos7.spec -bb
 mkdir -p $RPMOUTPUTDIRECTORY
 rsync -a /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/RPMS/* $RPMOUTPUTDIRECTORY
 
-echo "built the following RPMs located in $RPMOUTPUTDIRECTORY:"
-ls -lah $RPMOUTPUTDIRECTORY
-
-
+echo "RPM build script is complete: if successful, RPM files located in $RPMOUTPUTDIRECTORY"
