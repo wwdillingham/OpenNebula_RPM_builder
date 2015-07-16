@@ -145,7 +145,7 @@ read RPMOUTPUTDIRECTORY
 rpmbuild /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SPECS/centos7.spec -bb
 
 #Copy contents out of the rpm-build buildir 
-mdkir -p $RPMOUTPUTDIRECTORY
+mkdir -p $RPMOUTPUTDIRECTORY
 rsync -a /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/RPMS/* $RPMOUTPUTDIRECTORY
 
 echo "built the following RPMs located in $RPMOUTPUTDIRECTORY:"
