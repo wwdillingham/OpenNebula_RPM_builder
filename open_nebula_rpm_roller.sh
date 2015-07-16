@@ -4,6 +4,7 @@
 
 
 echo "This script required git, scons, wget and, yum-builddep (from yum-utils) to run sucessfully, should we ensure they are installed? [y/n]"
+read INSTALLPACKAGES
 if [[ $INSTALLPACKAGES == "y" || $INSTALLPACKAGES == "Y" ]]
 then
 	#to be handled by userdata script ******
@@ -12,6 +13,8 @@ then
         yum install -y http://mirror-proxy.rc.fas.harvard.edu/centos/6/os/x86_64/Packages/log4cpp-1.0-13.el6_5.1.x86_64.rpm
         yum install -y http://mirror-proxy.rc.fas.harvard.edu/centos/6/os/x86_64/Packages/log4cpp-devel-1.0-13.el6_5.1.x86_64.rpm
 	#to be handled by userdata script *******
+else
+	echo "Proceeding without checking for required packages to run script"
 fi
 
 
