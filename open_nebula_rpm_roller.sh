@@ -21,11 +21,10 @@ fi
 #Clone the repo in /tmp
 echo "What is the https url of the remote git repo DEFAULT: https://github.com/OpenNebula/one.git"
 read REMOTEGITURL
-if [[ -z "$REMOTEGITURL" ]] #if emtpy set to default
+if [[ -z "$REMOTEGITURL" ]] #if emtpy set to default 
 then
 	REMOTEGITURL="https://github.com/OpenNebula/one.git" 
 fi
-dd #make default if empty
 
 #Verify that the remote repository exists
 if [[ `echo $REMOTEGITURL | rev | cut -d"." -f2- | rev | xargs curl --silent | wc -l` == 0 ]]
@@ -153,14 +152,19 @@ sed -i "s/^.*Version\:.*$/Version: $RELEASESUBVERSION.$HOUSEVERSION/g" /tmp/open
 #need to verify it has the dependencies required to build the RPM
 yum-builddep /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SPECS/centos7.spec
 
-echo "Where would you like the RPM files to be copied to once they are done building?"
+echo "Please input full path where you want RPMS copied to default = /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/RPMS"
 read RPMOUTPUTDIRECTORY
 
 #it all comes down to this
 rpmbuild /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SPECS/centos7.spec -bb
 
 #Copy contents out of the rpm-build buildir 
-mkdir -p $RPMOUTPUTDIRECTORY
-rsync -a /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/RPMS/* $RPMOUTPUTDIRECTORY
+if [[ ! -z "$RPMOUTPUTDIRECTORY" ]] #if not empty string / user specified a location
+then
+	mkdir -p $RPMOUTPUTDIRECTORY
+	rsync -a /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/RPMS/* $RPMOUTPUTDIRECTORY
+else #empty string / user did not specify a location
+	RPMOUTPUTDIRECTORY="/tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/RPMS"
+fi
 
 echo "RPM build script is complete: if successful, RPM files located in $RPMOUTPUTDIRECTORY"
