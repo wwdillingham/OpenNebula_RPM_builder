@@ -2,12 +2,11 @@
 #Wes Dillingham
 #wes_dillingham@harvard.edu
 
-echo "The following dependencies are required for the source compilation / rpm building: rpm-build libcurl-devel libxml2-devel xmlrpc-c-devel mysql-devel sqlite-devel scons java-1.7.0-openjdk-devel log4cpp log4cpp-devel"
-echo "Should this script attempt to install them? [y/n]"
-read INSTALLPACKAGES
+
+echo "This script required git, scons, wget and, yum-builddep (from yum-utils) to run sucessfully, should we ensure they are installed? [y/n]"
 if [[ $INSTALLPACKAGES == "y" || $INSTALLPACKAGES == "Y" ]]
 then
-        yum install libcurl-devel libxml2-devel xmlrpc-c-devel mysql-devel sqlite-devel scons java-1.7.0-openjdk-devel rpm-build ruby scons gcc-c++ gcc make git rsync wget scons
+	yum install -y wget yum-utils wget git
         yum install -y http://mirror-proxy.rc.fas.harvard.edu/centos/6/os/x86_64/Packages/log4cpp-1.0-13.el6_5.1.x86_64.rpm
         yum install -y http://mirror-proxy.rc.fas.harvard.edu/centos/6/os/x86_64/Packages/log4cpp-devel-1.0-13.el6_5.1.x86_64.rpm
 fi
@@ -39,7 +38,6 @@ cd /tmp/one
 git branch -a | grep -i remote | awk -F '/' '{print $3}'
 echo "Please select a branch that we want to roll into an RPM (example: one-1.0 )"
 read REMOTEBRANCH
-#TODO Need to validate that it is is a legit branch
 echo "Attempting to checkout branch: $REMOTEBRANCH"
 sleep 3
 git checkout $REMOTEBRANCH
@@ -90,8 +88,6 @@ EXTRACTEDSOURCEDIR=`tar -tf  /tmp/$REMOTETARGZ  | grep -v ".rpm" | grep -i src`
 echo "EXTRACTEDSOURCEDIR is $EXTRACTEDSOURCEDIR"
 
 #####We now need to swap in the version to the SPEC file. 
-
-
 if [ -d /tmp/$EXTRACTEDSOURCEDIR ]
 then
 	echo "Source directory found at /tmp/$EXTRACTEDSOURCEDIR"
@@ -104,29 +100,39 @@ else
 fi
 
 sleep 3
-echo "Now we will build the file structure for an RPM build."
+
+#BUILD rpmbuild file strcuture
 mkdir -p /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
-#echo '%_topdir %(echo $HOME)/rpmbuild' > ~/.rpmmacros
+
+#Create rpmacros to tell rpmbuild where to look
 echo "%_topdir /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION" > ~/.rpmmacros
 sleep 2
-echo "need to make the source tar.gz from git branch and stick it in SOURCES"
+
+#Create a scratch space to unpack the source code from the git release branch
 mkdir /tmp/one_source_scratch
 mkdir /tmp/one_source_scratch/opennebula-$RELEASESUBVERSION.$HOUSEVERSION
 rsync -a /tmp/one/* /tmp/one_source_scratch/opennebula-$RELEASESUBVERSION.$HOUSEVERSION #copy git branch source
-echo "making /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SOURCES/opennebula-$RELEASESUBVERSION.$HOUSEVERSION$TARGZ from stuff here: /tmp/one_source_scratch/$RELEASEURL" 
+
+#Making .tar.gz (of the source code above and placing it in the rpm build folder
 cd /tmp/one_source_scratch
 tar -cvzf /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SOURCES/opennebula-$RELEASESUBVERSION.$HOUSEVERSION$TARGZ opennebula-$RELEASESUBVERSION.$HOUSEVERSION
+
+#Now placing the source rom into the rpmbuld folder
 echo "Now we will rsync the source rpm contents (build requirements) into our RPM build file structure"
 rsync -a --exclude 'opennebula*.tar.gz' /tmp/$EXTRACTEDSOURCEDIR /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SOURCES
-echo "rsync complete"
-sleep 2
+
+#Copy the spec file into the rpmbuild folder
 echo "Now copying the spec file from the downloaded tarball into the build directory"
 cp /tmp/$EXTRACTEDSOURCEDIR/centos7.spec /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SPECS
-# sed -i 's/^.*Version\:.*$/Version: 4.12.3-fasrc01/g'
+
+#Applying a swap in the spec file - the spec file needs to incorporate the internal release code as specified by the user
 echo "Applying $RELEASESUBVERSION.$HOUSEVERSION to spec file"
 sed -i "s/^.*Version\:.*$/Version: $RELEASESUBVERSION.$HOUSEVERSION/g" /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SPECS/centos7.spec 
-echo "spec file copy complete"
-sleep 2
-echo "Will now build the RPMs"
+
+#need to verify it has the dependencies required to build the RPM
+yum-builddep /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SPECS/centos7.spec
+
+
+#it all comes down to this
 rpmbuild /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SPECS/centos7.spec -bb
 
