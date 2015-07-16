@@ -21,7 +21,7 @@ fi
 #Clone the repo in /tmp
 echo "What is the https url of the remote git repo DEFAULT: https://github.com/OpenNebula/one.git"
 read REMOTEGITURL
-if [[ -z $REMOTEGITURL ]] #if emtpy set to default
+if [[ -z "$REMOTEGITURL" ]] #if emtpy set to default
 then
 	REMOTEGITURL="https://github.com/OpenNebula/one.git" 
 fi
