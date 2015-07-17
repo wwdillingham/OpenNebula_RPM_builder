@@ -47,7 +47,7 @@ else
         echo "Looks like we dont have any repository so going to clone a fresh copy"
         sleep 3
         cd /tmp
-        git clone https://github.com/OpenNebula/one.git
+        git clone $REMOTEGITURL
 fi
 
 
