@@ -23,6 +23,7 @@ echo "What is the https url of the remote git repo DEFAULT: https://github.com/O
 read REMOTEGITURL
 if [[ -z "$REMOTEGITURL" ]] #if emtpy set to default 
 then
+	echo "no input, setting to default"
 	REMOTEGITURL="https://github.com/OpenNebula/one.git" 
 fi
 
