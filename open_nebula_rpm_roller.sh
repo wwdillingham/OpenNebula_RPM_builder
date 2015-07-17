@@ -2,6 +2,7 @@
 #Wes Dillingham
 #wes_dillingham@harvard.edu
 
+SCRIPTLOC=`pwd`
 
 echo "This script required rsync, rpm-build, git, scons, wget, and yum-builddep (from yum-utils) to run sucessfully, should we ensure they are installed? [y/n]"
 read INSTALLPACKAGES
@@ -10,8 +11,14 @@ then
 	#to be handled by userdata script ******
 	yum install  wget yum-utils wget git rpm-build
 	yum install -y http://mirror-proxy.rc.fas.harvard.edu/epel/7/x86_64/s/scons-2.3.0-1.el7.noarch.rpm
-        yum install -y http://mirror-proxy.rc.fas.harvard.edu/centos/6/os/x86_64/Packages/log4cpp-1.0-13.el6_5.1.x86_64.rpm
-        yum install -y http://mirror-proxy.rc.fas.harvard.edu/centos/6/os/x86_64/Packages/log4cpp-devel-1.0-13.el6_5.1.x86_64.rpm
+        #yum install -y http://mirror-proxy.rc.fas.harvard.edu/centos/6/os/x86_64/Packages/log4cpp-1.0-13.el6_5.1.x86_64.rpm
+        #yum install -y http://mirror-proxy.rc.fas.harvard.edu/centos/6/os/x86_64/Packages/log4cpp-devel-1.0-13.el6_5.1.x86_64.rpm
+	tar xf $SCRIPTLOC/log4cpp*.tar.gz
+	cd $SCRIPTLOC/log4cpp
+	./configure
+	make
+	make install
+	rm -f /usr/local/lib/*.so*
 	#to be handled by userdata script *******
 else
 	echo "Proceeding without checking for required packages to run script"
