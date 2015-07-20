@@ -9,16 +9,7 @@ read INSTALLPACKAGES
 if [[ $INSTALLPACKAGES == "y" || $INSTALLPACKAGES == "Y" ]]
 then
 	#to be handled by userdata script ******
-	yum install  wget yum-utils wget git rpm-build gcc make
-	yum install -y http://mirror-proxy.rc.fas.harvard.edu/epel/7/x86_64/s/scons-2.3.0-1.el7.noarch.rpm
-        #yum install -y http://mirror-proxy.rc.fas.harvard.edu/centos/6/os/x86_64/Packages/log4cpp-1.0-13.el6_5.1.x86_64.rpm
-        #yum install -y http://mirror-proxy.rc.fas.harvard.edu/centos/6/os/x86_64/Packages/log4cpp-devel-1.0-13.el6_5.1.x86_64.rpm
-	tar xf $SCRIPTLOC/log4cpp*.tar.gz
-	cd $SCRIPTLOC/log4cpp
-	./configure
-	make
-	make install
-	rm -f /usr/local/lib/*.so*
+	yum install wget yum-utils git rpm-build gcc make
 	#to be handled by userdata script *******
 else
 	echo "Proceeding without checking for required packages to run script"
@@ -159,6 +150,19 @@ sed -i "s/^.*Version\:.*$/Version: $RELEASESUBVERSION.$HOUSEVERSION/g" /tmp/open
 
 #need to verify it has the dependencies required to build the RPM
 yum-builddep /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SPECS/centos7.spec
+
+#Build dependencies are done at this point, install the software that is bundled in the repo: scons and log4cpp
+
+#SCONS
+yum localinstall $SCRIPTLOC/scons-2.3.0-1.el7.noarch.rpm
+
+#LOG4CPP
+tar xf $SCRIPTLOC/log4cpp*.tar.gz
+cd $SCRIPTLOC/log4cpp
+./configure
+make
+make install
+rm -f /usr/local/lib/*.so*
 
 echo "Please input full path where you want RPMS copied to default = /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/RPMS"
 read RPMOUTPUTDIRECTORY
