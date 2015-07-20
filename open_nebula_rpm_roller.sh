@@ -4,6 +4,30 @@
 
 SCRIPTLOC=`pwd`
 
+#This script is run non-interactively and expects environemnt variables to be set:
+#ONE_GIT_HTTPS_URL: The https url to a git repository (if unset defaults to https://github.com/OpenNebula/one.git)
+#ONE_GIT_BRANCH : The branch of the Repository you would like to use as the source for RPM building
+#ONE_INTERNAL_VERSION : The string you would like to append to "Version" in the the spec file. Prefix is extracted from the codebase. 
+			#so for instance 4.12 is extracted from codebase and ONE_INTERNAL_VERSION is set at 1, this would result in version 4.12.1
+#ONE_OUTPUT_DIRECTORY : [OPTIONAL] Directory location for RPMS to be copied to (will be created if non-existant)
+
+
+${ONE_GIT_HTTPS_URL:?"Need to set ONE_GIT_HTTPS_URL environment variable"}
+${ONE_GIT_BRANCH:?"Need to set ONE_GIT_BRANCH environment variable"}
+${ONE_INTERNAL_VERSION:?"Need to ser ONE_INTERNAL_VERSION environment variable"}
+${ONE_OUTPUT_DIRECTORY?"ONE_OUTPUT_DIRECTORY is unset and the default will be used, location will be supplied when script is complete"}
+
+echo "The script has detected the following settings from your envrionment"
+echo "ONE_GIT_HTTPS_URL is $ONE_GIT_HTTPS_URL this is the repo we will copy"
+echo "ONE_GIT_BRANCH is $ONE_GIT_BRANCH this is the branch we will use to make RPMS"
+echo "ONE_INTERNAL_VERSION is $ONE_INTERNAL_VERSION this is the internal release ID appended to the official release"
+if [[ ! -z "$RPMOUTPUTDIRECTORY" ]] #if not empty
+then
+	echo "ONE_OUTPUT_DIRECTORY is $ONE_OUTPUT_DIRECTORY this is the directory where RPMS files will be placed"
+else
+	echo "ONE_OUTPUT_DIRECTORY is not set, location will be provided at the end of the script"
+fi 
+
 echo "This script required rsync, rpm-build, git, scons, wget, and yum-builddep (from yum-utils) to run sucessfully, should we ensure they are installed? [y/n]"
 read INSTALLPACKAGES
 if [[ $INSTALLPACKAGES == "y" || $INSTALLPACKAGES == "Y" ]]
