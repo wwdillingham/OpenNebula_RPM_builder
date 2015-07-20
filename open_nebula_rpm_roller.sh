@@ -157,7 +157,7 @@ yum-builddep /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SPECS/centos7.spec
 #Build dependencies are done at this point, install the software that is bundled in the repo: scons and log4cpp
 
 #LOG4CPP
-tar xf $SCRIPTLOC/log4cpp*.tar.gz
+tar -xvzf $SCRIPTLOC/log4cpp-1.1.1.tar.gz -C $SCRIPTLOC
 cd $SCRIPTLOC/log4cpp
 ./configure
 make
