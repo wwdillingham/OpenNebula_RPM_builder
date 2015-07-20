@@ -12,10 +12,10 @@ SCRIPTLOC=`pwd`
 #ONE_OUTPUT_DIRECTORY : [OPTIONAL] Directory location for RPMS to be copied to (will be created if non-existant)
 
 
-${ONE_GIT_HTTPS_URL:?"Need to set ONE_GIT_HTTPS_URL environment variable"}
-${ONE_GIT_BRANCH:?"Need to set ONE_GIT_BRANCH environment variable"}
-${ONE_INTERNAL_VERSION:?"Need to ser ONE_INTERNAL_VERSION environment variable"}
-${ONE_OUTPUT_DIRECTORY?"ONE_OUTPUT_DIRECTORY is unset and the default will be used, location will be supplied when script is complete"}
+: ${ONE_GIT_HTTPS_URL:?"Need to set ONE_GIT_HTTPS_URL environment variable"}
+: ${ONE_GIT_BRANCH:?"Need to set ONE_GIT_BRANCH environment variable"}
+: ${ONE_INTERNAL_VERSION:?"Need to set ONE_INTERNAL_VERSION environment variable"}
+: ${ONE_OUTPUT_DIRECTORY?"ONE_OUTPUT_DIRECTORY is unset and the default will be used, location will be supplied when script is complete"}
 
 echo "The script has detected the following settings from your envrionment"
 echo "ONE_GIT_HTTPS_URL is $ONE_GIT_HTTPS_URL this is the repo we will copy"
