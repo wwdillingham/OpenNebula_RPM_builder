@@ -148,13 +148,13 @@ cp /tmp/$EXTRACTEDSOURCEDIR/centos7.spec /tmp/opennebula-$RELEASESUBVERSION.$HOU
 echo "Applying $RELEASESUBVERSION.$HOUSEVERSION to spec file"
 sed -i "s/^.*Version\:.*$/Version: $RELEASESUBVERSION.$HOUSEVERSION/g" /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SPECS/centos7.spec 
 
+#SCONS needs to come before yum-builddep as it is a build dependecy
+yum localinstall $SCRIPTLOC/scons-2.3.0-1.el7.noarch.rpm
+
 #need to verify it has the dependencies required to build the RPM
 yum-builddep /tmp/opennebula-$RELEASESUBVERSION.$HOUSEVERSION/SPECS/centos7.spec
 
 #Build dependencies are done at this point, install the software that is bundled in the repo: scons and log4cpp
-
-#SCONS
-yum localinstall $SCRIPTLOC/scons-2.3.0-1.el7.noarch.rpm
 
 #LOG4CPP
 tar xf $SCRIPTLOC/log4cpp*.tar.gz
