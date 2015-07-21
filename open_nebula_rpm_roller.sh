@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 #Wes Dillingham
 #wes_dillingham@harvard.edu
 
