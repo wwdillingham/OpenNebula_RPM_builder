@@ -144,7 +144,7 @@ echo "Applying $RELEASESUBVERSION.$ONE_INTERNAL_VERSION to spec file"
 sed -i "s/^.*Version\:.*$/Version: $RELEASESUBVERSION.$ONE_INTERNAL_VERSION/g" /tmp/opennebula-$RELEASESUBVERSION.$ONE_INTERNAL_VERSION/SPECS/centos7.spec 
 
 #need to verify it has the dependencies required to build the RPM
-yum-builddep /tmp/opennebula-$RELEASESUBVERSION.$ONE_INTERNAL_VERSION/SPECS/centos7.spec
+yum-builddep -y /tmp/opennebula-$RELEASESUBVERSION.$ONE_INTERNAL_VERSION/SPECS/centos7.spec
 
 #Build dependencies are done at this point, install the software that is bundled in the repo: scons and log4cpp
 
