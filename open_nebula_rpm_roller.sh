@@ -143,9 +143,6 @@ cp /tmp/$EXTRACTEDSOURCEDIR/centos7.spec /tmp/opennebula-$RELEASESUBVERSION.$ONE
 echo "Applying $RELEASESUBVERSION.$ONE_INTERNAL_VERSION to spec file"
 sed -i "s/^.*Version\:.*$/Version: $RELEASESUBVERSION.$ONE_INTERNAL_VERSION/g" /tmp/opennebula-$RELEASESUBVERSION.$ONE_INTERNAL_VERSION/SPECS/centos7.spec 
 
-#SCONS needs to come before yum-builddep as it is a build dependecy
-yum localinstall $SCRIPTLOC/scons-2.3.0-1.el7.noarch.rpm
-
 #need to verify it has the dependencies required to build the RPM
 yum-builddep /tmp/opennebula-$RELEASESUBVERSION.$ONE_INTERNAL_VERSION/SPECS/centos7.spec
 
