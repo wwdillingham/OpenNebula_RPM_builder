@@ -118,9 +118,6 @@ sleep 3
 #BUILD rpmbuild file strcuture
 mkdir -p /tmp/opennebula-$RELEASESUBVERSION.$ONE_INTERNAL_VERSION/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 
-#Create rpmacros to tell rpmbuild where to look
-echo "%_topdir /tmp/opennebula-$RELEASESUBVERSION.$ONE_INTERNAL_VERSION" > ~/.rpmmacros
-sleep 2
 
 #Create a scratch space to unpack the source code from the git release branch
 mkdir /tmp/one_source_scratch
@@ -157,7 +154,7 @@ make install
 rm -f /usr/local/lib/*.so*
 
 #it all comes down to this
-rpmbuild /tmp/opennebula-$RELEASESUBVERSION.$ONE_INTERNAL_VERSION/SPECS/centos7.spec -bb
+rpmbuild --buildroot=/tmp/opennebula-$RELEASESUBVERSION.$ONE_INTERNAL_VERSION /tmp/opennebula-$RELEASESUBVERSION.$ONE_INTERNAL_VERSION/SPECS/centos7.spec -bb 
 
 #Copy contents out of the rpm-build buildir 
 if [[ ! -z "$ONE_OUTPUT_DIRECTORY" ]] #if not empty string / user specified a location
